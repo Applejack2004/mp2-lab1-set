@@ -92,3 +92,18 @@
 //}
 //
 //#endif
+#include "tbitfield.h"
+#include <locale.h>
+int main()
+{
+	TBitField A(10),B(A);
+	cin >> A;
+	cout << A<< endl;
+	cout << B<< endl;
+	A= ~A;
+	cout << A << endl;
+	B = B | A;
+	cout << B << endl;
+	
+
+ }
