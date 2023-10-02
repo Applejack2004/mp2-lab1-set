@@ -75,7 +75,9 @@ void TBitField::SetBit(const int n) // установить бит
 	{
 		throw " index out of range";
 	}
-	pMem[n] = 1;
+	TELEM m = GetMemMask(n);
+	int ind = GetMemIndex(n);
+	pMem[ind] = pMem[ind] | m;
 }
 
 void TBitField::ClrBit(const int n) // очистить бит
@@ -84,7 +86,10 @@ void TBitField::ClrBit(const int n) // очистить бит
 	{
 		throw " index out of range";
 	}
-	pMem[n] = 0;
+	TELEM m = ~(GetMemMask(n));
+	int ind = GetMemIndex(n);
+	pMem[ind] = pMem[ind] & m;
+    
 }
 
 int TBitField::GetBit(const int n) const // получить значение бита
@@ -93,18 +98,24 @@ int TBitField::GetBit(const int n) const // получить значение б
 	{
 		throw " index out of range";
 	}
-  return pMem[n];
+	TELEM m = (GetMemMask(n));
+	int ind = GetMemIndex(n);
+	TELEM res = pMem[ind] & m;
+	return res;
 }
 
 // битовые операции
 
-TBitField& TBitField::operator=(const TBitField &bf) // присваивание
+TBitField& TBitField::operator=(const TBitField& bf) // присваивание
 {
-	delete[] pMem;
+	if ((bf.MemLen != MemLen))
+	{
+		delete[] pMem;
+    }
 	BitLen = bf.BitLen;
 	MemLen = bf.MemLen;
-	pMem = new TELEM[BitLen];
-	for (int i = 0; i < BitLen; i++)
+	pMem = new TELEM[MemLen];
+	for (int i = 0; i < MemLen; i++)
 	{
 		pMem[i] = bf.pMem[i];
 	}
@@ -118,9 +129,16 @@ int TBitField::operator==(const TBitField &bf) const // сравнение
 		return false;
 
     }
-	for (int i = 0; i < BitLen; i++)
+	for (int i = 0; i< MemLen-1; i++)
 	{
 		if (pMem[i] != bf.pMem[i])
+		{
+			return false;
+		}
+	}
+	for (int i = (MemLen - 1) * 32; i < BitLen; i++)
+	{
+		if (GetBit(i) != bf.GetBit(i))
 		{
 			return false;
 		}
@@ -139,12 +157,17 @@ TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 	{
 		throw "bifield sizes are not equal ";
 	}
-	TBitField res(BitLen);
-	for (int i = 0; i < BitLen; i++)
+	TBitField res(MemLen);
+	for (int i = 0; i < MemLen; i++)
 	{
 		res.pMem[i] = (pMem[i] | bf.pMem[i]);
 	}
-	return res;
+	//for (int i = (MemLen - 1) * 32; i < BitLen; i++)
+	//{
+	//	(GetBit(i) | bf.GetBit(i));
+
+	//}
+	return res;//jncskrf
 }
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
@@ -154,17 +177,22 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 		throw "bifield sizes are not equal ";
 	}
 	TBitField res(BitLen);
-	for (int i = 0; i < BitLen; i++)
+	for (int i = 0; i < MemLen; i++)
 	{
 		res.pMem[i] = (pMem[i] & bf.pMem[i]);
 	}
+	/*for (int i = (MemLen - 1) * 32; i < BitLen; i++)
+	{
+		 res.pMem[i]=(GetBit(i) & bf.GetBit(i));
+	
+	}*/
 	return res;
 }
 
 TBitField TBitField::operator~(void) // отрицание
 {
-	TBitField res(BitLen);
-	for (int i = 0; i < BitLen; i++)
+	TBitField res(MemLen);
+	for (int i = 0; i < MemLen; i++)
 	{
 		res.pMem[i] = !(pMem[i]);
 	}
