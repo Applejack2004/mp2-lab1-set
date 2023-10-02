@@ -215,7 +215,7 @@ TBitField TBitField::operator~(void) // отрицание
 
   ostream &operator<<(ostream &ostr, const TBitField &bf) // вывод
 {
-	for (int i = 0; i < bf.BitLen; i++)
+	for (int i = 0; i < bf.MemLen; i++)
 	{
 
 		cout << bf.pMem[i];
