@@ -162,11 +162,14 @@ TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 	{
 		res.pMem[i] = (pMem[i] | bf.pMem[i]);
 	}
-	//for (int i = (MemLen - 1) * 32; i < BitLen; i++)
-	//{
-	//	(GetBit(i) | bf.GetBit(i));
+	/*for (int i = 0; i < BitLen; i++)
+	{
+		if ((GetBit(i) | bf.GetBit(i))!=0)
+	    {
+	       res.SetBit(i);
+	    }
 
-	//}
+	}*/
 	return res;//jncskrf
 }
 
@@ -181,10 +184,13 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 	{
 		res.pMem[i] = (pMem[i] & bf.pMem[i]);
 	}
-	/*for (int i = (MemLen - 1) * 32; i < BitLen; i++)
+	/*for (int i = 0; i < BitLen; i++)
 	{
-		 res.pMem[i]=(GetBit(i) & bf.GetBit(i));
-	
+		if ((GetBit(i) & bf.GetBit(i))!=0)
+		{
+		   res.SetBit(i);
+		}
+
 	}*/
 	return res;
 }
@@ -196,6 +202,19 @@ TBitField TBitField::operator~(void) // отрицание
 	{
 		res.pMem[i] = !(pMem[i]);
 	}
+	/*for (int i = 0; i < BitLen; i++)
+{
+	if ((GetBit(i))==0)
+	{
+	   res.SetBit(i);
+	}
+	else
+	{
+	  res.ClrBit(i);
+	}
+
+
+}*/
 	return res;
 
 }
