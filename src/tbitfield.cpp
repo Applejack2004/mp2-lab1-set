@@ -289,7 +289,7 @@ TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 		for (int i = 0; i < bf.MemLen; i++) {
 			ans.pMem[i] = pMem[i] | bf.pMem[i];
 		}
-		for (int i = (bf.MemLen - 1) * 32 + bf.BitLen % 32 + 1; i < BitLen; i++) {
+		for (int i = (bf.MemLen - 1) * 32 + bf.BitLen % 32 ; i < BitLen; i++) {
 			if (GetBit(i)) {
 				ans.SetBit(i);
 			}
@@ -304,7 +304,7 @@ TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 		for (int i = 0; i < MemLen; i++) {
 			ans.pMem[i] = pMem[i] | bf.pMem[i];
 		}
-		for (int i = (MemLen - 1) * 32 + BitLen % 32 + 1; i < bf.BitLen; i++) {
+		for (int i = (MemLen - 1) * 32 + BitLen % 32 ; i < bf.BitLen; i++) {
 			if (bf.GetBit(i)) {
 				ans.SetBit(i);
 			}
@@ -388,7 +388,7 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 		for (int i = 0; i < bf.MemLen; i++) {
 			ans.pMem[i] = bf.pMem[i] & pMem[i];
 		}
-		for (int i = (bf.MemLen - 1) * 32 + bf.BitLen % 32 + 1; i < BitLen; i++) {
+		for (int i = (bf.MemLen - 1) * 32 + bf.BitLen % 32; i < BitLen; i++) {
 			ans.ClrBit(i);
 		}
 		return ans;
@@ -398,7 +398,7 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 		for (int i = 0; i < MemLen; i++) {
 			ans.pMem[i] = bf.pMem[i] & pMem[i];
 		}
-		for (int i = (MemLen - 1) * 32 + BitLen % 32 + 1; i < bf.BitLen; i++) {
+		for (int i = (MemLen - 1) * 32 + BitLen % 32 ; i < bf.BitLen; i++) {
 			ans.ClrBit(i);
 		}
 		return ans;
@@ -415,24 +415,24 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 
 TBitField TBitField::operator~(void) // отрицание
 {
-	TBitField res(BitLen);
-//	TBitField res(*this);
-	for (int i = 0; i < MemLen-1; i++)
+	//TBitField res(BitLen);
+	TBitField res(*this);
+	for (int i = 0; i < MemLen; i++)
 	{
-		res.pMem[i] = ~(pMem[i]);
-		//res.pMem[i] = ~(res.pMem[i]);
+		//res.pMem[i] = ~(pMem[i]);
+		res.pMem[i] = ~(res.pMem[i]);
 	}
-	for (int k = (MemLen - 1) * 32; k < res.BitLen; k++)
-	{
-		if (res.GetBit(k) == 1)
-		{
-			res.ClrBit(k);
-		}
-		else
-		{
-			res.SetBit(k);
-		}
-	}
+	//for (int k = (MemLen - 1) * 32; k < res.BitLen; k++)
+	//{
+	//	if (res.GetBit(k) == 1)
+	//	{
+	//		res.ClrBit(k);
+	//	}
+	//	else
+	//	{
+	//		res.SetBit(k);
+	//	}
+	//}
 
 	return res;
 	
